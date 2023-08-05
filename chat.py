@@ -61,7 +61,7 @@ class ChatFreePT:
         self._send_prompt(text)
         return self._await_response()
 
-    def main(self):
+    def open(self):
         self._initialize_driver()
 
         if self.driver.current_url == LOGIN_URL:
@@ -73,7 +73,7 @@ class ChatFreePT:
 
 if __name__ == "__main__":
     chatbot = ChatFreePT(headless=False)
-    chatbot.main()
+    chatbot.open()
 
     if len(sys.argv) > 1:
         prompt = sys.argv[1].replace("\n", "; ")
