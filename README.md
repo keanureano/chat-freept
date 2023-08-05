@@ -1,6 +1,8 @@
-# ChatFreePT Readme
+# Chat-FreePT
 
-This repository contains a Python script for interacting with OpenAI's ChatGPT using Selenium and Chrome WebDriver.
+Chat-FreePT is a Free API alternative that allows you to interact with OpenAI's ChatGPT in real-time. It uses Selenium and undetected-chromedriver to simulate a web browser, enabling you to have a conversation with ChatGPT just like you would on the OpenAI platform. This tool provides a simple interface for sending prompts to ChatGPT and receiving its responses instantly.
+
+Please note that ChatFreePT is intended for educational purposes only. It is not an official API provided by OpenAI, and it should not be used for any commercial or production purposes. Use it responsibly and in compliance with OpenAI's usage policies.
 
 ## Requirements
 
