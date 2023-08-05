@@ -8,8 +8,17 @@ Please note that ChatFreePT is intended for educational purposes only. It is not
 
 - Python 3.6 or higher
 - Chrome Browser installed
+- ChromeDriver
 
 ## Setup
+
+Before using Chat-FreePT, you need to download the Chrome browser and ChromeDriver. Follow the steps below:
+
+1. Download Chrome and ChromeDriver Browser from the official website: [https://googlechromelabs.github.io/chrome-for-testing/#stable](https://googlechromelabs.github.io/chrome-for-testing/#stable).
+
+2. Add the downloaded ChromeDriver executable to your system's PATH variable. This step is necessary to ensure that Selenium can locate the ChromeDriver when running the script.
+
+Once you have completed the above setup, proceed with the following steps:
 
 1. Clone the repository:
 
