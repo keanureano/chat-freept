@@ -72,19 +72,19 @@ class ChatFreePT:
 
 
 if __name__ == "__main__":
-    print(f"{Fore.YELLOW}Starting... {Fore.RESET}")
-    chatbot = ChatFreePT()
+    chatbot = ChatFreePT(headless=False)
     chatbot.main()
 
-    prompt = "Hello world!"
-    if len(sys.argv) == 2:
-        prompt = sys.argv[1]
+    if len(sys.argv) > 1:
+        prompt = sys.argv[1].replace("\n", "; ")
+    else:
+        prompt = "Hello world!"
 
-    print(f"{Fore.GREEN}User: {prompt}{Fore.RESET}")
-    print(f"{Fore.YELLOW}Awaiting Response...{Fore.RESET}")
+    print(f"{Fore.LIGHTBLUE_EX}[User]: {prompt}{Fore.RESET}")
+    print(f"{Fore.LIGHTBLACK_EX}Awaiting Response...{Fore.RESET}")
 
     response = chatbot.chat(prompt)
-    print(f"{Fore.GREEN}Chat-FreePT: {response}{Fore.RESET}")
+    print(f"{Fore.GREEN}[Chat-FreePT]: {response}{Fore.RESET}")
 
     chatbot.close()
     exit
