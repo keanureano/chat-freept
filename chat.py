@@ -5,7 +5,6 @@ from selenium import webdriver
 from undetected_chromedriver import Chrome
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from colorama import Fore
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 
@@ -65,9 +64,9 @@ class ChatFreePT:
         self._initialize_driver()
 
         if self.driver.current_url == LOGIN_URL:
-            print(f"{Fore.RED}LOGIN REQUIRED: Please log in to ChatGPT. {Fore.RESET}")
+            print(f"LOGIN REQUIRED: Please log in to ChatGPT.")
             self._initialize_driver(login_mode=True)
-            input(f"{Fore.RED}Press enter after logging in... {Fore.RESET}")
+            input(f"Press enter after logging in...")
             self._initialize_driver()
 
 
@@ -80,11 +79,11 @@ if __name__ == "__main__":
     else:
         prompt = "Hello world!"
 
-    print(f"{Fore.LIGHTBLUE_EX}[User]: {prompt}{Fore.RESET}")
-    print(f"{Fore.LIGHTBLACK_EX}Awaiting Response...{Fore.RESET}")
+    print(f"[User]: {prompt}")
+    print(f"Awaiting Response...")
 
     response = chatbot.chat(prompt)
-    print(f"{Fore.GREEN}[Chat-FreePT]: {response}{Fore.RESET}")
+    print(f"[Chat-FreePT]: {response}")
 
     chatbot.close()
     exit
