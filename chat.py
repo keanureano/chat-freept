@@ -36,7 +36,7 @@ class ChatFreePT:
         self.driver.get(HOME_URL)
 
     def _send_prompt(self, prompt):
-        time.sleep(2)
+        time.sleep(1)
         wait = WebDriverWait(self.driver, 60)
         wait.until(
             EC.visibility_of_element_located(
@@ -49,23 +49,29 @@ class ChatFreePT:
         textarea.send_keys(prompt, Keys.ENTER)
 
     def _await_response(self):
-        time.sleep(2)
-
-        def locate_latest_chat_element():
-            chat_elements = self.driver.find_elements(By.CSS_SELECTOR, ".markdown")
-            return chat_elements[-1]
-
         try:
-            wait = WebDriverWait(self.driver, 60)
+            wait = WebDriverWait(self.driver, 10)
             wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".markdown")))
-            latest_chat_element = locate_latest_chat_element()
+
             wait.until_not(
                 EC.visibility_of_element_located((By.CSS_SELECTOR, ".result-streaming"))
             )
+
+            chat_elements = self.driver.find_elements(By.CSS_SELECTOR, ".markdown")
+            latest_chat_element = chat_elements[-1]
             return latest_chat_element.text
+
         except StaleElementReferenceException:
-            latest_chat_element = locate_latest_chat_element()
-            return latest_chat_element.text
+            for _ in range(3):
+                try:
+                    chat_elements = self.driver.find_elements(
+                        By.CSS_SELECTOR, ".markdown"
+                    )
+                    latest_chat_element = chat_elements[-1]
+                    return latest_chat_element.text
+                except StaleElementReferenceException:
+                    pass
+            raise
 
     def close(self):
         self.driver.close()
@@ -84,7 +90,7 @@ class ChatFreePT:
             self._initialize_driver()
 
 
-if __name__ == "__main__":
+def main():
     chatbot = ChatFreePT(headless=False)
 
     if len(sys.argv) > 1:
@@ -99,4 +105,8 @@ if __name__ == "__main__":
     print(f"[Chat-FreePT]: {latest_response}")
 
     chatbot.close()
-    exit
+    exit()
+
+
+if __name__ == "__main__":
+    main()
