@@ -7,6 +7,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.common.exceptions import StaleElementReferenceException
 
 HOME_URL = "https://chat.openai.com"
 LOGIN_URL = "https://chat.openai.com/auth/login"
@@ -36,27 +37,33 @@ class ChatFreePT:
 
     def _send_prompt(self, prompt):
         time.sleep(1)
+        wait = WebDriverWait(self.driver, 60)
+        wait.until(
+            EC.visibility_of_element_located(
+                (By.CSS_SELECTOR, 'textarea[placeholder="Send a message"]')
+            )
+        )
         textarea = self.driver.find_element(
             By.CSS_SELECTOR, 'textarea[placeholder="Send a message"]'
         )
         textarea.send_keys(prompt, Keys.ENTER)
 
     def _await_response(self):
-        time.sleep(2
-                   )
+        def locate_latest_chat_element():
+            chat_elements = self.driver.find_elements(By.CSS_SELECTOR, ".markdown")
+            return chat_elements[-1]
 
-        chat_elements = self.driver.find_elements(
-            By.CSS_SELECTOR,
-            ".markdown",
-        )
-        latest_chat_element = chat_elements[-1]
-
-        WebDriverWait(self.driver, 60).until_not(
-            lambda driver: "result-streaming"
-            in latest_chat_element.get_attribute("class")
-        )
-
-        return latest_chat_element.text
+        try:
+            wait = WebDriverWait(self.driver, 60)
+            wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".markdown")))
+            latest_chat_element = locate_latest_chat_element()
+            wait.until_not(
+                EC.visibility_of_element_located((By.CSS_SELECTOR, ".result-streaming"))
+            )
+            return latest_chat_element.text
+        except StaleElementReferenceException:
+            latest_chat_element = locate_latest_chat_element()
+            return latest_chat_element.text
 
     def close(self):
         self.driver.close()
