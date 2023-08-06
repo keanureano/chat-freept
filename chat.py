@@ -17,6 +17,7 @@ class ChatFreePT:
         self.headless = headless
         self.profile = profile
         self.driver = None
+        self.open()
 
     def _initialize_driver(self, login_mode=False):
         if self.driver:
@@ -72,7 +73,6 @@ class ChatFreePT:
 
 if __name__ == "__main__":
     chatbot = ChatFreePT(headless=False)
-    chatbot.open()
 
     if len(sys.argv) > 1:
         prompt = sys.argv[1].replace("\n", "; ")

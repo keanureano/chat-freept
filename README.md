@@ -45,22 +45,16 @@ To use the script, follow these steps:
    chatbot = ChatFreePT()
    ```
 
-2. Run the `open` method to set up the browser:
+2. Provide a prompt for ChatGPT. You can either pass the prompt as an argument when running the script or use the default prompt "Hello world!" if no argument is provided.
 
-   ```python
-   chatbot.open()
-   ```
-
-3. Provide a prompt for ChatGPT. You can either pass the prompt as an argument when running the script or use the default prompt "Hello world!" if no argument is provided.
-
-4. Use the `chat` method to send the prompt and receive a response from ChatGPT:
+3. Use the `chat` method to send the prompt and receive a response from ChatGPT:
 
    ```python
    response = chatbot.chat("Your prompt goes here")
    print(response)
    ```
 
-5. After you are done with the conversation, close the browser:
+4. After you are done with the conversation, close the browser:
 
    ```python
    chatbot.close()
