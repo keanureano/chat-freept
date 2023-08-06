@@ -42,7 +42,8 @@ class ChatFreePT:
         textarea.send_keys(prompt, Keys.ENTER)
 
     def _await_response(self):
-        time.sleep(1)
+        time.sleep(2
+                   )
 
         chat_elements = self.driver.find_elements(
             By.CSS_SELECTOR,
@@ -61,7 +62,7 @@ class ChatFreePT:
         self.driver.close()
 
     def chat(self, text):
-        self._send_prompt(text)
+        self._send_prompt(text.replace("\n", "; "))
         return self._await_response()
 
     def open(self):
@@ -78,7 +79,7 @@ if __name__ == "__main__":
     chatbot = ChatFreePT(headless=False)
 
     if len(sys.argv) > 1:
-        prompt = sys.argv[1].replace("\n", "; ")
+        prompt = sys.argv[1]
     else:
         prompt = "Hello world!"
 
