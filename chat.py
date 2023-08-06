@@ -42,17 +42,20 @@ class ChatFreePT:
         textarea.send_keys(prompt, Keys.ENTER)
 
     def _await_response(self):
-        time.sleep(3)
-        WAIT_DURATION = 60
+        time.sleep(1)
 
-        response = self.driver.find_element(
+        chat_elements = self.driver.find_elements(
             By.CSS_SELECTOR,
             ".markdown",
         )
-        WebDriverWait(self.driver, WAIT_DURATION).until_not(
-            lambda driver: "result-streaming" in response.get_attribute("class")
+        latest_chat_element = chat_elements[-1]
+
+        WebDriverWait(self.driver, 60).until_not(
+            lambda driver: "result-streaming"
+            in latest_chat_element.get_attribute("class")
         )
-        return response.text
+
+        return latest_chat_element.text
 
     def close(self):
         self.driver.close()
@@ -82,8 +85,8 @@ if __name__ == "__main__":
     print(f"[User]: {prompt}")
     print(f"Awaiting Response...")
 
-    response = chatbot.chat(prompt)
-    print(f"[Chat-FreePT]: {response}")
+    latest_response = chatbot.chat(prompt)
+    print(f"[Chat-FreePT]: {latest_response}")
 
     chatbot.close()
     exit
