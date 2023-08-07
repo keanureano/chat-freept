@@ -11,7 +11,7 @@ from selenium.common.exceptions import StaleElementReferenceException
 
 HOME_URL = "https://chat.openai.com"
 LOGIN_URL = "https://chat.openai.com/auth/login"
-MAX_CHARACTER_COUNT = 10000
+MAX_CHARACTER_COUNT = 8192
 
 
 class ChatFreePT:
