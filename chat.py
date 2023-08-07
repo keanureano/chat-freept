@@ -29,11 +29,11 @@ class ChatFreePT:
         options.add_argument(
             f"--user-data-dir=C:/Users/{os.getlogin()}/AppData/Local/Google/Chrome/User Data/{self.profile}"
         )
+
         if self.headless and not login_mode:
             options.add_argument("--headless")
 
         self.driver = Chrome(options=options)
-
         self.driver.get(HOME_URL)
 
     def _send_prompt(self, prompt):
