@@ -15,11 +15,16 @@ MAX_CHARACTER_COUNT = 10000
 
 
 class ChatFreePT:
-    def __init__(self, headless=False, profile="Default"):
+    def __init__(self, headless=False, log=False, profile="Default"):
         self.headless = headless
+        self.log = log
         self.profile = profile
         self.driver = None
         self.open()
+
+    def logger(self, output):
+        if self.log:
+            print(output)
 
     def _initialize_driver(self, login_mode=False):
         if self.driver:
@@ -37,6 +42,7 @@ class ChatFreePT:
         self.driver.get(HOME_URL)
 
     def _send_prompt(self, prompt):
+        time.sleep(1)
         wait = WebDriverWait(self.driver, 60)
         wait.until(
             EC.visibility_of_element_located(
@@ -48,8 +54,7 @@ class ChatFreePT:
         )
 
         textarea.click()
-        textarea.send_keys(prompt)
-        textarea.send_keys(Keys.ENTER)
+        textarea.send_keys(prompt, Keys.ENTER)
 
     def _await_response(self):
         time.sleep(2)
