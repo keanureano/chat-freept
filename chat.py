@@ -15,8 +15,8 @@ MAX_CHARACTER_COUNT = 10000
 
 
 class ChatFreePT:
-    def __init__(self, debug=True, profile="Default"):
-        self.debug = debug
+    def __init__(self, headless=False, profile="Default"):
+        self.headless = headless
         self.profile = profile
         self.driver = None
         self.open()
@@ -29,11 +29,11 @@ class ChatFreePT:
         options.add_argument(
             f"--user-data-dir=C:/Users/{os.getlogin()}/AppData/Local/Google/Chrome/User Data/{self.profile}"
         )
-
-        if not (self.debug or login_mode):
+        if self.headless and not login_mode:
             options.add_argument("--headless")
 
         self.driver = Chrome(options=options)
+
         self.driver.get(HOME_URL)
 
     def _send_prompt(self, prompt):
@@ -47,6 +47,7 @@ class ChatFreePT:
             By.CSS_SELECTOR, 'textarea[placeholder="Send a message"]'
         )
 
+        textarea.click()
         textarea.send_keys(prompt)
         textarea.send_keys(Keys.ENTER)
 
@@ -88,7 +89,7 @@ class ChatFreePT:
 
 
 if __name__ == "__main__":
-    chatbot = ChatFreePT(debug=False)
+    chatbot = ChatFreePT()
 
     if len(sys.argv) > 1:
         prompt = sys.argv[1]
