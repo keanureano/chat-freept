@@ -14,8 +14,8 @@ LOGIN_URL = "https://chat.openai.com/auth/login"
 
 
 class ChatFreePT:
-    def __init__(self, headless=True, profile="Default"):
-        self.headless = headless
+    def __init__(self, debug=True, profile="Default"):
+        self.debug = debug
         self.profile = profile
         self.driver = None
         self.open()
@@ -29,14 +29,14 @@ class ChatFreePT:
             f"--user-data-dir=C:/Users/{os.getlogin()}/AppData/Local/Google/Chrome/User Data/{self.profile}"
         )
 
-        if self.headless and not login_mode:
+        if not (self.debug or login_mode):
             options.add_argument("--headless")
 
         self.driver = Chrome(options=options)
         self.driver.get(HOME_URL)
 
     def _send_prompt(self, prompt):
-        time.sleep(1)
+        time.sleep(2)
         wait = WebDriverWait(self.driver, 60)
         wait.until(
             EC.visibility_of_element_located(
@@ -49,29 +49,23 @@ class ChatFreePT:
         textarea.send_keys(prompt, Keys.ENTER)
 
     def _await_response(self):
-        try:
-            wait = WebDriverWait(self.driver, 10)
-            wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".markdown")))
+        time.sleep(2)
 
+        def locate_latest_chat_element():
+            chat_elements = self.driver.find_elements(By.CSS_SELECTOR, ".markdown")
+            return chat_elements[-1]
+
+        try:
+            wait = WebDriverWait(self.driver, 60)
+            wait.until(EC.visibility_of_element_located((By.CSS_SELECTOR, ".markdown")))
+            latest_chat_element = locate_latest_chat_element()
             wait.until_not(
                 EC.visibility_of_element_located((By.CSS_SELECTOR, ".result-streaming"))
             )
-
-            chat_elements = self.driver.find_elements(By.CSS_SELECTOR, ".markdown")
-            latest_chat_element = chat_elements[-1]
             return latest_chat_element.text
-
         except StaleElementReferenceException:
-            for _ in range(3):
-                try:
-                    chat_elements = self.driver.find_elements(
-                        By.CSS_SELECTOR, ".markdown"
-                    )
-                    latest_chat_element = chat_elements[-1]
-                    return latest_chat_element.text
-                except StaleElementReferenceException:
-                    pass
-            raise
+            latest_chat_element = locate_latest_chat_element()
+            return latest_chat_element.text
 
     def close(self):
         self.driver.close()
@@ -90,8 +84,8 @@ class ChatFreePT:
             self._initialize_driver()
 
 
-def main():
-    chatbot = ChatFreePT(headless=False)
+if __name__ == "__main__":
+    chatbot = ChatFreePT(debug=False)
 
     if len(sys.argv) > 1:
         prompt = sys.argv[1]
@@ -105,8 +99,4 @@ def main():
     print(f"[Chat-FreePT]: {latest_response}")
 
     chatbot.close()
-    exit()
-
-
-if __name__ == "__main__":
-    main()
+    exit
