@@ -8,7 +8,6 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.common.exceptions import StaleElementReferenceException
-import pyperclip
 
 HOME_URL = "https://chat.openai.com"
 LOGIN_URL = "https://chat.openai.com/auth/login"
@@ -38,7 +37,6 @@ class ChatFreePT:
         self.driver.get(HOME_URL)
 
     def _send_prompt(self, prompt):
-        time.sleep(2)
         wait = WebDriverWait(self.driver, 60)
         wait.until(
             EC.visibility_of_element_located(
@@ -49,9 +47,7 @@ class ChatFreePT:
             By.CSS_SELECTOR, 'textarea[placeholder="Send a message"]'
         )
 
-        pyperclip.copy(prompt)
-        textarea.click()
-        textarea.send_keys(Keys.CONTROL, "v")
+        textarea.send_keys(prompt)
         textarea.send_keys(Keys.ENTER)
 
     def _await_response(self):
@@ -77,7 +73,7 @@ class ChatFreePT:
         self.driver.close()
 
     def chat(self, text):
-        processed_text = text[:MAX_CHARACTER_COUNT]
+        processed_text = text.replace("\n", "; ")[:MAX_CHARACTER_COUNT]
         self._send_prompt(processed_text)
         return self._await_response()
 
