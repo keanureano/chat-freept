@@ -12,6 +12,7 @@ import pyperclip
 
 HOME_URL = "https://chat.openai.com"
 LOGIN_URL = "https://chat.openai.com/auth/login"
+MAX_CHARACTER_COUNT = 10000
 
 
 class ChatFreePT:
@@ -76,7 +77,8 @@ class ChatFreePT:
         self.driver.close()
 
     def chat(self, text):
-        self._send_prompt(text.replace("\n", "; "))
+        processed_text = text[:MAX_CHARACTER_COUNT]
+        self._send_prompt(processed_text)
         return self._await_response()
 
     def open(self):
